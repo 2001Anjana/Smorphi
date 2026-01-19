@@ -46,7 +46,7 @@ def generate_launch_description():
             [
                 FindPackageShare('smorphi_ros2_launchers'),
                 'map',
-                'turtlebot3_world.yaml'
+                'my_map3.yaml'
             ]
         )
     )

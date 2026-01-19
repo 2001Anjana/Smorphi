@@ -1,0 +1,8 @@
+
+# ROS/ Python junk
+__pycache__/
+*.pyc
+
+# Maps (optional)
+*.pgm
+*.yaml

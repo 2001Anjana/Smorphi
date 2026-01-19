@@ -23,7 +23,7 @@ class SmorphiController(Node):
 		
 		self.create_subscription(Int32, "shape_need", self.shpneed, 10)
 		#self.shape_pub = self.create_publisher(Int32, "current_shape", 50)
-		self.ser = serial.Serial('/dev/ttyUSB1',115200, timeout=0.005)
+		self.ser = serial.Serial('/dev/smorphi_mb',115200, timeout=0.005)
 		
 		self.x = 0.0
 		self.y = 0.0
@@ -55,9 +55,33 @@ class SmorphiController(Node):
 		cmd_vel = str(cm_Vx)+","+str(cm_Vy)+","+str(cm_Wz)+","+str(cm_shape)+"\n"
 		#print ("cmd_vel")
 		self.ser.write(cmd_vel.encode())
+	
+	# def shpneed(self, msg2):
+	# 	self.shape_need = msg2.data
 
-	def shpneed(self, msg2):
+	# 	## edited part
+
+	# 	# send immediately (using last velocities, or zeros)
+    # 	cm_Vx = "{:.2f}".format(self.vx)
+    # 	cm_Vy = "{:.2f}".format(self.vy)
+    # 	cm_Wz = "{:.2f}".format(0.0)   # or self.w if you want
+    # 	cmd = f"{cm_Vx},{cm_Vy},{cm_Wz},{self.shape_need}\n"
+    # 	self.ser.write(cmd.encode())
+
+	# 	## edited part
+
+	from std_msgs.msg import Int32  # better than import *
+
+	def shpneed(self, msg2: Int32):
 		self.shape_need = msg2.data
+
+		# Send immediately (use last known vx/vy; wz = 0 for shape-change)
+		cm_Vx = f"{self.vx:.2f}"
+		cm_Vy = f"{self.vy:.2f}"
+		cm_Wz = f"{0.0:.2f}"
+		cmd = f"{cm_Vx},{cm_Vy},{cm_Wz},{self.shape_need}\n"
+		self.ser.write(cmd.encode())
+
 
 	def imucallback(self, msg):
 		#self.get_logger().info("imu_subscribed")
