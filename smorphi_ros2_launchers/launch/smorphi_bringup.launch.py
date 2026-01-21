@@ -63,6 +63,12 @@ def generate_launch_description():
         'rplidar_a1_launch.py'
     )
 
+    gap_launch = os.path.join(
+        get_package_share_directory('lidar_gap_measure'),
+        'launch',
+        'gap_width.launch.py'
+    )
+
     return LaunchDescription([
         # Declare LiDAR args
         declare_lidar_port,
@@ -94,6 +100,10 @@ def generate_launch_description():
                 'scan_mode': lidar_scan_mode,
                 'frame_id': lidar_frame_id,
             }.items()
+        ),
+
+	IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(gap_launch)
         ),
     ])
 
