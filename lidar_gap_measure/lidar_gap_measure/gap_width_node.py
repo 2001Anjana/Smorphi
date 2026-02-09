@@ -16,6 +16,7 @@ class GapWidthNode(Node):
     """
     - Publishes gap width and a gap marker line at target_x
     - Publishes directional distances (front/left/back/right)
+    - Publishes left->back 90deg sector minimum distance (left_back_sector_min)
     - Visualizes directional distances as rays + text in RViz2
     """
     def __init__(self):
@@ -32,6 +33,10 @@ class GapWidthNode(Node):
         # Direction measurement window (+/- degrees around each direction)
         self.declare_parameter('dir_half_angle_deg', 5.0)
 
+        # ✅ NEW: sector clearance settings (LEFT->BACK, 90 degrees)
+        self.declare_parameter('sector_start_deg', 90.0)   # left
+        self.declare_parameter('sector_end_deg', 180.0)    # back
+
         scan_topic = self.get_parameter('scan_topic').value
         self.sub = self.create_subscription(LaserScan, scan_topic, self.on_scan, 10)
 
@@ -40,17 +45,44 @@ class GapWidthNode(Node):
 
         self.pub_dirs = self.create_publisher(Float32MultiArray, 'dir_distances', 10)
 
+        # ✅ NEW: publish min distance in the left->back sector
+        self.pub_sector = self.create_publisher(Float32, 'left_back_sector_min', 10)
+
         # New: visualization for distances
         self.pub_dir_rays = self.create_publisher(MarkerArray, 'dir_rays', 10)
         self.pub_dir_text = self.create_publisher(MarkerArray, 'dir_text', 10)
 
         self.get_logger().info(
-            f"Listening on {scan_topic}. Publishing gap_width, gap_marker, dir_distances, dir_rays, dir_text."
+            f"Listening on {scan_topic}. Publishing gap_width, gap_marker, dir_distances, "
+            f"left_back_sector_min, dir_rays, dir_text."
         )
 
     def min_range_in_window(self, angles, ranges, center_rad, half_width_rad):
         diff = (angles - center_rad + math.pi) % (2.0 * math.pi) - math.pi
         mask = np.abs(diff) <= half_width_rad
+        if not np.any(mask):
+            return float('nan')
+
+        vals = ranges[mask]
+        vals = vals[np.isfinite(vals)]
+        if vals.size == 0:
+            return float('nan')
+
+        return float(np.min(vals))
+
+    # ✅ NEW: minimum range in a sector [start_rad .. end_rad]
+    def min_range_in_sector(self, angles, ranges, start_rad, end_rad):
+        # normalize to [-pi, pi]
+        diff_start = (angles - start_rad + math.pi) % (2.0 * math.pi) - math.pi
+        diff_end   = (angles - end_rad   + math.pi) % (2.0 * math.pi) - math.pi
+
+        # sector without wrap (your case 90°..180°)
+        if start_rad <= end_rad:
+            mask = (angles >= start_rad) & (angles <= end_rad)
+        else:
+            # wrap-around sector (not used here, but safe)
+            mask = (angles >= start_rad) | (angles <= end_rad)
+
         if not np.any(mask):
             return float('nan')
 
@@ -114,6 +146,12 @@ class GapWidthNode(Node):
         min_points_side = int(self.get_parameter('min_points_side').value)
         dir_half_angle_deg = float(self.get_parameter('dir_half_angle_deg').value)
 
+        # ✅ NEW: sector angles (degrees -> radians)
+        sector_start_deg = float(self.get_parameter('sector_start_deg').value)
+        sector_end_deg = float(self.get_parameter('sector_end_deg').value)
+        sector_start = math.radians(sector_start_deg)
+        sector_end = math.radians(sector_end_deg)
+
         angles = msg.angle_min + np.arange(len(msg.ranges)) * msg.angle_increment
         ranges = np.array(msg.ranges, dtype=np.float32)
 
@@ -144,6 +182,12 @@ class GapWidthNode(Node):
         msg_dirs.data = [front, left, back, right]
         self.pub_dirs.publish(msg_dirs)
 
+        # ✅ NEW: Left->Back 90° sector minimum distance
+        sector_min = self.min_range_in_sector(angles, ranges, sector_start, sector_end)
+        out_sector = Float32()
+        out_sector.data = float(sector_min) if math.isfinite(sector_min) else float('nan')
+        self.pub_sector.publish(out_sector)
+
         # Visualize as rays + text
         rays = MarkerArray()
         texts = MarkerArray()
@@ -162,17 +206,15 @@ class GapWidthNode(Node):
             end.y = dist * math.sin(angle_rad)
             end.z = 0.0
 
-            # Ray line
             rays.markers.append(
                 self.make_line_marker(
                     msg.header, "dir_rays", mid_base,
                     origin, end,
                     thickness=0.02,
-                    rgba=(0.0, 1.0, 1.0, 1.0)  # cyan
+                    rgba=(0.0, 1.0, 1.0, 1.0)
                 )
             )
 
-            # Text near the end point
             tpos = Point()
             tpos.x = end.x + text_offset * math.cos(angle_rad)
             tpos.y = end.y + text_offset * math.sin(angle_rad)

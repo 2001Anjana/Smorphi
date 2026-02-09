@@ -68,6 +68,11 @@ def generate_launch_description():
         'launch',
         'gap_width.launch.py'
     )
+    shape_auto_launch = os.path.join(
+        get_package_share_directory('lidar_gap_measure'),
+        'launch',
+        'shape_auto.launch.py'
+    )
 
     return LaunchDescription([
         # Declare LiDAR args
@@ -104,6 +109,10 @@ def generate_launch_description():
 
 	IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gap_launch)
+        ),
+
+ 	IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(shape_auto_launch)
         ),
     ])
 
