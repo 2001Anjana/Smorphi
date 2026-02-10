@@ -1,0 +1,35 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.section {
+  background: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#connectionStatus {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+#logBox {
+  height: 250px;
+  background: black;
+  color: lime;
+  padding: 10px;
+  overflow-y: auto;
+}
