@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'gap_width_node = lidar_gap_measure.gap_width_node:main',
+	    'shape_auto_node = lidar_gap_measure.shape_auto_node:main',
         ],
     },
 )
