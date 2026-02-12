@@ -227,15 +227,18 @@ class MyPythonNode(Node):
             
             # Check data ready with timeout
             data_ready = False
-            for _ in range(5):  # Try up to 5 times
+            for _ in range(20):          # 20ms total
                 status1 = self.bus.read_byte_data(AK8963_ADDRESS, AK8963_ST1)
                 if status1 & 0x01:
                     data_ready = True
                     break
-                time.sleep(0.001)  # 1ms delay
-            
+                time.sleep(0.001)
+
             if not data_ready:
-                return np.array([0.0, 0.0, 0.0]), False
+                if self.debug_output:
+                    self.get_logger().warn("Mag invalid: ST1 not ready")
+                return self.mag_filtered.copy(), False
+
             
             # Read all magnetometer registers at once
             mag_data = self.bus.read_i2c_block_data(AK8963_ADDRESS, AK8963_HXL, 7)
@@ -243,7 +246,10 @@ class MyPythonNode(Node):
             # Check for overflow
             st2 = mag_data[6]
             if st2 & 0x08:  # Overflow bit
-                return np.array([0.0, 0.0, 0.0]), False
+                if self.debug_output:
+                    self.get_logger().warn("Mag invalid: overflow (ST2)")
+                return self.mag_filtered.copy(), False
+
             
             # Convert to signed 16-bit values
             mag_x = np.int16((mag_data[1] << 8) | mag_data[0])
@@ -261,7 +267,7 @@ class MyPythonNode(Node):
             
             # Validate magnetometer reading
             mag_magnitude = np.linalg.norm(mag_values)
-            if mag_magnitude < self.mag_validity_threshold or mag_magnitude > 100.0:  # Reasonable range for Earth's magnetic field
+            if mag_magnitude < self.mag_validity_threshold or mag_magnitude > 150.0:  # Reasonable range for Earth's magnetic field
                 return np.array([0.0, 0.0, 0.0]), False
             
             # Apply low-pass filter
@@ -350,26 +356,23 @@ class MyPythonNode(Node):
         try:
             # Read IMU sensors
             self.imu.readSensor()
-            
+
             # Read magnetometer
             mag_vals, mag_valid = self.read_magnetometer_with_validation()
 
-	    # >>> ADD THIS BLOCK HERE (apply your calibration to mag_vals) <<<
+            # Apply calibration ONLY if magnetometer data is valid
             if self.mag_available and mag_valid:
-                 mag_cal = mag_vals.copy()
+                mag_cal = mag_vals.copy()
 
-            # subtract hard-iron bias
-            mag_cal = mag_cal - self.imu.MagBias
+                # subtract hard-iron bias
+                mag_cal = mag_cal - self.imu.MagBias
 
-            # choose ONE method (recommended: transform)
-            # (1) Simple scale+bias:
-            # mag_cal = mag_cal * self.imu.Mags
+                # choose ONE method:
+                # mag_cal = mag_cal * self.imu.Mags              # simple scale
+                mag_cal = self.imu.Magtransform.dot(mag_cal)     # ellipsoid correction
 
-            # (2) Precise ellipsoid transform+bias:
-            mag_cal = self.imu.Magtransform.dot(mag_cal)
-
-            # replace mag_vals used by fusion
-            mag_vals = mag_cal
+                # replace mag_vals used by fusion
+                mag_vals = mag_cal
             # >>> END BLOCK <<<            
             
             # Update statistics
