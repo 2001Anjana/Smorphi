@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 import subprocess
 
-app = FastAPI()
+app = FastAPI() //
 
 app.add_middleware(
     CORSMiddleware,
