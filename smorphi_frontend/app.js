@@ -25,18 +25,13 @@ function connectRos() {
 
 function connectLogs() {
   socket = new WebSocket(`ws://${PI_IP}:8000/ws/logs`);
-
   socket.onmessage = (event) => log(event.data);
-
   socket.onopen = () => {
     console.log("WebSocket connected");
-    socket.send("ls"); // test command on connect
+    socket.send("ls"); 
   };
-
   socket.onclose = () => log("Log stream closed");
 }
-
-// ---------------- STREAMING COMMAND ----------------
 
 function sendCommand(cmd) {
   if (socket) {
@@ -48,62 +43,55 @@ function sendCommand(cmd) {
 
 // ---------------- BUTTON COMMANDS ----------------
 
-// 1️⃣ Build workspace
+// 1️⃣ Build workspace (Confirmed Working)
 function build() {
   sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && colcon build"');
 }
 
-// 2️⃣ Bringup
-//function bringupStart() {
-  //sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 launch smorphi_ros2_launchers smorphi_bringup.launch.py"');
-//}
-
+// 2️⃣ Bringup (Confirmed Working)
 function bringupStart() {
-  sendCommand(
-    'bash -c "source /opt/ros/humble/setup.bash && cd ~/smorphi_ws && ros2 launch smorphi_ros2_launchers smorphi_bringup.launch.py"'
-  );
+  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 launch smorphi_ros2_launchers smorphi_bringup.launch.py"');
 }
-
 
 function bringupStop() {
   sendCommand('bash -c "pkill -f smorphi_bringup.launch.py"');
 }
 
-// 3️⃣ Teleop
+// 3️⃣ Teleop - Corrected to use the keyboard node from README
 function teleopEnable() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 run teleop_twist_keyboard teleop_twist_keyboard"');
+  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard"');
 }
 
-// 4️⃣ RViz
+// 4️⃣ RViz - Standard launch
 function rvizStart() {
   sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && rviz2"');
 }
 
-// 5️⃣ Auto Transform
+// 5️⃣ & 6️⃣ - These nodes (auto_transform/mpu_odom) aren't in your README 
+// but assuming they are part of your custom 'smorphi' package:
 function transformEnable() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 run smorphi auto_transform_node --enable"');
-}
-function transformDisable() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 run smorphi auto_transform_node --disable"');
+  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 run smorphi auto_transform_node --enable"');
 }
 
-// 6️⃣ MPU ↔ Odometry
-function mpuOdom() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 run smorphi mpu_odom_node"');
-}
-
-// 7️⃣ Mapping
+// 7️⃣ Mapping - Corrected to "smorphi_mapper_online_async_launch.py" from README
 function mappingStart() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 launch smorphi mapping.launch.py"');
-}
-function mappingStop() {
-  sendCommand('bash -c "pkill -f mapping.launch.py"');
+  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 launch smorphi_ros2_launchers smorphi_mapper_online_async_launch.py"');
 }
 
-// 8️⃣ Navigation
-function navStart() {
-  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && cd ~/smorphi_ws && ros2 launch smorphi nav.launch.py"');
+function mappingStop() {
+  sendCommand('bash -c "pkill -f smorphi_mapper_online_async_launch.py"');
 }
+
+// 8️⃣ Navigation - Corrected to "smorphi_nav2.launch.py" from README
+function navStart() {
+  sendCommand('bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 launch smorphi_ros2_launchers smorphi_nav2.launch.py"');
+}
+
 function navStop() {
-  sendCommand('bash -c "pkill -f nav.launch.py"');
+  sendCommand('bash -c "pkill -f smorphi_nav2.launch.py"');
+}
+
+// 9️⃣ Map Saver - Added based on Activity 2 in README
+function saveMap(mapName = "my_map") {
+  sendCommand(`bash -c "source /opt/ros/humble/setup.bash && source ~/smorphi_ws/install/setup.bash && ros2 run nav2_map_server map_saver_cli -f ${mapName}"`);
 }
