@@ -2,66 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smorphi Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Smorphi Robot Control</h1>
+  <header>
+    <div class="header-left">
+      <div class="logo-mark">◈</div>
+      <div>
+        <h1>SMORPHI</h1>
+        <span class="subtitle">Robot Control Interface</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="connectionStatus">DISCONNECTED</span>
+      </div>
+      <button class="btn-connect" onclick="connectRos()">CONNECT</button>
+    </div>
+  </header>
 
-<div class="section">
-  <button onclick="connectRos()">Connect to ROS</button>
-  <span id="connectionStatus">Disconnected</span>
-</div>
+  <main>
 
-<div class="section">
-  <h2>Build</h2>
-  <button onclick="build()">Colcon Build</button>
-</div>
+    <!-- LEFT: Control Panel -->
+    <aside class="control-panel">
 
-<div class="section">
-  <h2>Bringup</h2>
-  <button onclick="bringupStart()">Start Bringup</button>
-  <button onclick="bringupStop()">Stop Bringup</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">WORKSPACE</h2>
+        <button class="btn btn-action" onclick="build()">⬡ Colcon Build</button>
+      </section>
 
-<div class="section">
-  <h2>Transform</h2>
-  <button onclick="transformEnable()">Auto Transform Enable</button>
-  <button onclick="transformDisable()">Auto Transform Disable</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">BRINGUP</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="bringupStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="bringupStop()">■ Stop</button>
+        </div>
+      </section>
 
-<div class="section">
-  <h2>Sensors</h2>
-  <button onclick="mpuOdom()">MPU ↔ Odometry</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">TRANSFORM</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="transformEnable()">▶ Enable</button>
+          <button class="btn btn-stop" onclick="transformDisable()">■ Disable</button>
+        </div>
+      </section>
 
-<div class="section">
-  <h2>Visualization</h2>
-  <button onclick="rvizStart()">Launch RViz2</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">SENSORS</h2>
+        <button class="btn btn-action" onclick="mpuOdom()">⬡ MPU → Odom</button>
+      </section>
 
-<div class="section">
-  <h2>Teleoperation</h2>
-  <button onclick="teleopEnable()">Enable Teleop</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">VISUALIZATION</h2>
+        <button class="btn btn-action" onclick="rvizStart()">⬡ Launch RViz2</button>
+      </section>
 
-<div class="section">
-  <h2>Mapping</h2>
-  <button onclick="mappingStart()">Start Mapping</button>
-  <button onclick="mappingStop()">Stop Mapping</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">TELEOPERATION</h2>
+        <button class="btn btn-start full-width" onclick="teleopEnable()">▶ Enable Teleop</button>
+        <div class="teleop-hint">
+          <div class="key-grid">
+            <span></span><span class="key">i</span><span></span>
+            <span class="key">j</span><span class="key">k</span><span class="key">l</span>
+            <span></span><span class="key">,</span><span></span>
+          </div>
+          <p class="hint-text">Focus the Teleop terminal panel, then use keyboard</p>
+        </div>
+      </section>
 
-<div class="section">
-  <h2>Navigation</h2>
-  <button onclick="navStart()">Start Navigation</button>
-  <button onclick="navStop()">Stop Navigation</button>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">MAPPING</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="mappingStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="mappingStop()">■ Stop</button>
+        </div>
+        <button class="btn btn-action full-width" style="margin-top:6px" onclick="saveMap()">⬡ Save Map</button>
+      </section>
 
-<div class="section">
-  <h2>ROS Logs</h2>
-  <pre id="logBox"></pre>
-</div>
+      <section class="ctrl-section">
+        <h2 class="section-label">NAVIGATION</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="navStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="navStop()">■ Stop</button>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- RIGHT: Terminal Grid -->
+    <div class="terminal-grid">
+
+      <div class="terminal-panel" id="panel-bringup">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-bringup"></span>
+          <span class="term-title">BRINGUP</span>
+          <button class="term-clear" onclick="clearLog('bringup')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-bringup"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-teleop">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-teleop"></span>
+          <span class="term-title">TELEOP</span>
+          <button class="term-clear" onclick="clearLog('teleop')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-teleop"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-mapping">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-mapping"></span>
+          <span class="term-title">MAPPING</span>
+          <button class="term-clear" onclick="clearLog('mapping')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-mapping"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-nav">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-nav"></span>
+          <span class="term-title">NAVIGATION</span>
+          <button class="term-clear" onclick="clearLog('nav')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-nav"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-transform">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-transform"></span>
+          <span class="term-title">TRANSFORM</span>
+          <button class="term-clear" onclick="clearLog('transform')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-transform"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-misc">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-misc"></span>
+          <span class="term-title">MISC / BUILD</span>
+          <button class="term-clear" onclick="clearLog('misc')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-misc"></pre>
+      </div>
+
+    </div>
+
+  </main>
 
 <script src="app.js"></script>
 </body>
