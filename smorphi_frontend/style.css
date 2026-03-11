@@ -392,3 +392,180 @@ main {
     grid-template-rows: repeat(3, 1fr);
   }
 }
+
+/* ─── Teleop Virtual Keyboard Modal ───────────────────────────── */
+.teleop-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 12, 15, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.teleop-modal-content {
+  background: var(--bg2);
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  padding: 24px;
+  max-width: 800px;
+  width: 90%;
+  box-shadow: 0 0 40px rgba(0,212,255,0.3);
+}
+
+.teleop-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.teleop-modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin: 0;
+}
+
+.btn-close {
+  font-size: 32px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.btn-close:hover {
+  color: var(--red);
+}
+
+.teleop-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+
+.teleop-keyboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.key-section {
+  background: var(--bg3);
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.key-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.key-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  justify-content: center;
+}
+
+.key-row:last-child {
+  margin-bottom: 0;
+}
+
+.vkey {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 48px;
+  height: 48px;
+  background: var(--bg);
+  border: 2px solid var(--border-hi);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 3px 0 var(--border);
+}
+
+.vkey:hover {
+  background: var(--bg2);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.vkey:active, .vkey.key-pressed {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--border);
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.teleop-info {
+  padding: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.teleop-info p {
+  margin: 4px 0;
+}
+
+.teleop-info strong {
+  color: var(--accent);
+  font-family: var(--mono);
+}
+
+@media (max-width: 800px) {
+  .teleop-keyboard {
+    grid-template-columns: 1fr;
+  }
+}

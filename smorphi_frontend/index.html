@@ -72,7 +72,7 @@
             <span class="key">j</span><span class="key">k</span><span class="key">l</span>
             <span></span><span class="key">,</span><span></span>
           </div>
-          <p class="hint-text">Focus the Teleop terminal panel, then use keyboard</p>
+          <p class="hint-text">Virtual keyboard opens automatically</p>
         </div>
       </section>
 
@@ -155,6 +155,91 @@
     </div>
 
   </main>
+
+  <!-- Virtual Keyboard Modal for Teleop -->
+  <div id="teleopModal" class="teleop-modal">
+    <div class="teleop-modal-content">
+      <div class="teleop-modal-header">
+        <h3>🎮 TELEOP CONTROL</h3>
+        <button class="btn-close" onclick="teleopDisable()">×</button>
+      </div>
+      
+      <div class="teleop-status">
+        <span class="status-indicator"></span>
+        <span>Use physical keyboard or click buttons</span>
+      </div>
+
+      <div class="teleop-keyboard">
+        <div class="key-section">
+          <div class="key-label">MOVEMENT</div>
+          <div class="key-row">
+            <button class="vkey" data-key="u" onmousedown="sendTeleopKey('u')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('u')" ontouchend="stopTeleopKey()">u</button>
+            <button class="vkey" data-key="i" onmousedown="sendTeleopKey('i')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('i')" ontouchend="stopTeleopKey()">i</button>
+            <button class="vkey" data-key="o" onmousedown="sendTeleopKey('o')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('o')" ontouchend="stopTeleopKey()">o</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="j" onmousedown="sendTeleopKey('j')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('j')" ontouchend="stopTeleopKey()">j</button>
+            <button class="vkey" data-key="k" onmousedown="sendTeleopKey('k')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('k')" ontouchend="stopTeleopKey()">k</button>
+            <button class="vkey" data-key="l" onmousedown="sendTeleopKey('l')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('l')" ontouchend="stopTeleopKey()">l</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="m" onmousedown="sendTeleopKey('m')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('m')" ontouchend="stopTeleopKey()">m</button>
+            <button class="vkey" data-key="," onmousedown="sendTeleopKey(',')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey(',')" ontouchend="stopTeleopKey()">,</button>
+            <button class="vkey" data-key="." onmousedown="sendTeleopKey('.')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('.')" ontouchend="stopTeleopKey()">.</button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">STRAFE (Shift)</div>
+          <div class="key-row">
+            <button class="vkey" data-key="U" onmousedown="sendTeleopKey('U')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('U')" ontouchend="stopTeleopKey()">U</button>
+            <button class="vkey" data-key="I" onmousedown="sendTeleopKey('I')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('I')" ontouchend="stopTeleopKey()">I</button>
+            <button class="vkey" data-key="O" onmousedown="sendTeleopKey('O')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('O')" ontouchend="stopTeleopKey()">O</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="J" onmousedown="sendTeleopKey('J')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('J')" ontouchend="stopTeleopKey()">J</button>
+            <button class="vkey" data-key="K" onmousedown="sendTeleopKey('K')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('K')" ontouchend="stopTeleopKey()">K</button>
+            <button class="vkey" data-key="L" onmousedown="sendTeleopKey('L')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('L')" ontouchend="stopTeleopKey()">L</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="M" onmousedown="sendTeleopKey('M')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('M')" ontouchend="stopTeleopKey()">M</button>
+            <button class="vkey" data-key="<" onmousedown="sendTeleopKey('<')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('<')" ontouchend="stopTeleopKey()"><</button>
+            <button class="vkey" data-key=">" onmousedown="sendTeleopKey('>')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('>')" ontouchend="stopTeleopKey()">></button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">VERTICAL</div>
+          <div class="key-row">
+            <button class="vkey" data-key="t" onmousedown="sendTeleopKey('t')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('t')" ontouchend="stopTeleopKey()">t ↑</button>
+            <button class="vkey" data-key="b" onmousedown="sendTeleopKey('b')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('b')" ontouchend="stopTeleopKey()">b ↓</button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">SPEED ADJUST</div>
+          <div class="key-row">
+            <button class="vkey" data-key="q" onmousedown="sendTeleopKey('q')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('q')" ontouchend="stopTeleopKey()">q +10%</button>
+            <button class="vkey" data-key="z" onmousedown="sendTeleopKey('z')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('z')" ontouchend="stopTeleopKey()">z -10%</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="w" onmousedown="sendTeleopKey('w')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('w')" ontouchend="stopTeleopKey()">w +Lin</button>
+            <button class="vkey" data-key="x" onmousedown="sendTeleopKey('x')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('x')" ontouchend="stopTeleopKey()">x -Lin</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="e" onmousedown="sendTeleopKey('e')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('e')" ontouchend="stopTeleopKey()">e +Ang</button>
+            <button class="vkey" data-key="c" onmousedown="sendTeleopKey('c')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('c')" ontouchend="stopTeleopKey()">c -Ang</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="teleop-info">
+        <p><strong>i/j/k/l</strong> = forward/left/stop/right</p>
+        <p><strong>u/o/m/.</strong> = diagonals</p>
+        <p><strong>K or Space</strong> = STOP</p>
+      </div>
+    </div>
+  </div>
 
 <script src="app.js"></script>
 </body>
