@@ -357,23 +357,20 @@ class MyPythonNode(Node):
             # Read IMU sensors
             self.imu.readSensor()
 
-            # Read magnetometer
-            mag_vals, mag_valid = self.read_magnetometer_with_validation()
+            mag_vals = np.array([0.0, 0.0, 0.0])
+            mag_valid = False
 
-            # Apply calibration ONLY if magnetometer data is valid
-            if self.mag_available and mag_valid:
-                mag_cal = mag_vals.copy()
+            # Only attempt magnetometer reads if enabled
+            if self.use_magnetometer:
+                # Read magnetometer
+                mag_vals, mag_valid = self.read_magnetometer_with_validation()
 
-                # subtract hard-iron bias
-                mag_cal = mag_cal - self.imu.MagBias
-
-                # choose ONE method:
-                # mag_cal = mag_cal * self.imu.Mags              # simple scale
-                mag_cal = self.imu.Magtransform.dot(mag_cal)     # ellipsoid correction
-
-                # replace mag_vals used by fusion
-                mag_vals = mag_cal
-            # >>> END BLOCK <<<            
+                # Apply calibration ONLY if magnetometer data is valid
+                if self.mag_available and mag_valid:
+                    mag_cal = mag_vals.copy()
+                    mag_cal = mag_cal - self.imu.MagBias
+                    mag_cal = self.imu.Magtransform.dot(mag_cal)
+                    mag_vals = mag_cal       
             
             # Update statistics
             self.sample_count += 1
@@ -393,8 +390,11 @@ class MyPythonNode(Node):
                     self.imu.GyroVals[0], self.imu.GyroVals[1], self.imu.GyroVals[2],
                     mag_vals[0], mag_vals[1], mag_vals[2], deltaTime)
             else:
-                # 6DOF fusion (complementary filter)
-                self.update_orientation_6dof(deltaTime)
+                # 6DOF Kalman fusion (gyro-only yaw)
+                self.sensorfusion.computeAndUpdateRollPitchYawGyroOnly(
+                    self.imu.AccelVals[0], self.imu.AccelVals[1], self.imu.AccelVals[2],
+                    self.imu.GyroVals[0], self.imu.GyroVals[1], self.imu.GyroVals[2],
+                    deltaTime)
             
             # Create and publish IMU message
             self.publish_imu_message(current_time, mag_vals, mag_valid)
@@ -491,20 +491,25 @@ class MyPythonNode(Node):
         
         # Print statistics every 5 seconds
         if current_time - self.last_stats_time > 5.0:
-            if self.sample_count > 0:
+            if self.use_magnetometer and self.sample_count > 0:
                 mag_success_rate = (self.mag_valid_count / self.sample_count) * 100
                 self.get_logger().info(f"Magnetometer success rate: {mag_success_rate:.1f}% ({self.mag_valid_count}/{self.sample_count})")
+            elif not self.use_magnetometer:
+                self.get_logger().info("Mode: GYRO-ONLY yaw (no magnetometer)")
             self.last_stats_time = current_time
             self.sample_count = 0
             self.mag_valid_count = 0
         
         # Print current values
-        mag_status = "OK" if self.mag_available else "DISABLED"
-        mag_data_status = "VALID" if mag_valid else "INVALID"
-        
-        print("roll: {:6.2f} \tpitch: {:6.2f} \tyaw: {:6.2f} \tmag: [{:6.2f}, {:6.2f}, {:6.2f}] \tstatus: {} \tdata: {}".format(
-            self.sensorfusion.roll, self.sensorfusion.pitch, self.sensorfusion.yaw,
-            mag_vals[0], mag_vals[1], mag_vals[2], mag_status, mag_data_status))
+        if self.use_magnetometer:
+            mag_status = "OK" if self.mag_available else "DISABLED"
+            mag_data_status = "VALID" if mag_valid else "INVALID"
+            print("roll: {:6.2f} \tpitch: {:6.2f} \tyaw: {:6.2f} \tmag: [{:6.2f}, {:6.2f}, {:6.2f}] \tstatus: {} \tdata: {}".format(
+                self.sensorfusion.roll, self.sensorfusion.pitch, self.sensorfusion.yaw,
+                mag_vals[0], mag_vals[1], mag_vals[2], mag_status, mag_data_status))
+        else:
+            print("roll: {:6.2f} \tpitch: {:6.2f} \tyaw: {:6.2f} \t[GYRO-ONLY yaw, no magnetometer]".format(
+                self.sensorfusion.roll, self.sensorfusion.pitch, self.sensorfusion.yaw))
 
 
 def main(args=None):

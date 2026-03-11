@@ -93,6 +93,50 @@ class Kalman:
 															self.yawError, self.yawDriftError, \
 															self.yawMeasurementError, gz, dt)
 
+	def computeAndUpdateRollPitchYawGyroOnly(self, ax, ay, az, gx, gy, gz, dt):
+		"""
+		Computes roll, pitch and yaw WITHOUT magnetometer.
+
+		Roll and pitch are fused from accelerometer + gyroscope via Kalman filter.
+		Yaw is estimated from gyroscope integration only, with the Kalman filter
+		providing bias drift compensation.
+
+		Parameters
+		----------
+		ax, ay, az : float
+			acceleration in x, y, z axes
+		gx, gy, gz : float
+			angular velocity about x, y, z axes (degrees/sec)
+		dt : float
+			time interval for kalman filter to be applied
+
+		Note: Yaw WILL drift over time without a magnetometer.
+			  The Kalman filter helps reduce gyro bias drift but
+			  cannot provide an absolute yaw reference.
+		"""
+
+		measuredRoll, measuredPitch = self.computeRollAndPitch(ax, ay, az)
+
+		reset, gy = self.__restrictRollAndPitch(measuredRoll, measuredPitch, gy)
+
+		if not reset:
+			self.roll, self.currentRollState, self.rollCovariance = self.update(
+				self.currentRollState, measuredRoll, self.rollCovariance,
+				self.rollError, self.rollDriftError,
+				self.rollMeasurementError, gx, dt)
+
+		self.pitch, self.currentPitchState, self.pitchCovariance = self.update(
+			self.currentPitchState, measuredPitch, self.pitchCovariance,
+			self.pitchError, self.pitchDriftError,
+			self.pitchMeasurementError, gy, dt)
+
+		# Yaw: integrate gyro and use as measurement for Kalman bias estimation
+		gyroYaw = self.yaw + gz * dt
+		self.yaw, self.currentYawState, self.yawCovariance = self.update(
+			self.currentYawState, gyroYaw, self.yawCovariance,
+			self.yawError, self.yawDriftError,
+			self.yawMeasurementError, gz, dt)
+	
 	def __restrictRollAndPitch(self, measuredRoll, measuredPitch, gy):
 
 		reset = 0
