@@ -26,7 +26,7 @@ def generate_launch_description():
 
     declare_waypoint_file_cmd = DeclareLaunchArgument(
         'waypoint_file',
-        default_value=os.path.join(pkg_share, 'params', 'smorphi_waypoints.yaml'),
+        default_value=os.path.expanduser('~/smorphi_waypoints.yaml'),
         description='Full path to the waypoint YAML file to save labeled locations')
 
     start_async_slam_toolbox_node = Node(
