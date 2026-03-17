@@ -16,8 +16,8 @@ setup(
         ('share/' + package_name + '/launch', ['launch/smorphi_nav2.launch.py']),
         ('share/' + package_name + '/launch', ['launch/waypoint_nav.launch.py']),
         ('share/' + package_name + '/params', ['params/smorphi.yaml']),
-        ('share/' + package_name + '/map', ['map/big_map1.pgm']),
-        ('share/' + package_name + '/map', ['map/big_map1.yaml']),
+        ('share/' + package_name + '/map', ['map/random3.pgm']),
+        ('share/' + package_name + '/map', ['map/random3.yaml']),
         ('share/' + package_name + '/rviz', ['rviz/navigation2.rviz']),
     ],
     install_requires=['setuptools', 'launch'],
@@ -31,6 +31,7 @@ setup(
         'console_scripts': [
             'save_waypoint = smorphi_ros2_launchers.waypoint_manager:main',
             'go_to_waypoint = smorphi_ros2_launchers.waypoint_commander:main',
+            'show_waypoint_labels = smorphi_ros2_launchers.waypoint_label_publisher:main',
         ],
     },
 )

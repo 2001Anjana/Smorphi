@@ -571,9 +571,10 @@ Visualization Manager:
       Name: Controller
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
-      Name: MarkerArray
+      Name: Waypoints
       Namespaces:
-        {}
+        waypoint_spheres: true
+        waypoint_labels: true
       Topic:
         Depth: 5
         Durability Policy: Volatile

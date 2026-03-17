@@ -46,7 +46,7 @@ def generate_launch_description():
             [
                 FindPackageShare('smorphi_ros2_launchers'),
                 'map',
-                'my_map3.yaml'
+                'random3.yaml'
             ]
         )
     )
@@ -147,4 +147,11 @@ def generate_launch_description():
             arguments=['-d', rviz_config_file],
             output='screen',
             condition=IfCondition(start_rviz)),
+
+        # Waypoint Label Publisher — displays saved waypoint labels on the map
+        Node(
+            package='smorphi_ros2_launchers',
+            executable='show_waypoint_labels',
+            name='waypoint_label_publisher',
+            output='screen'),
     ])
