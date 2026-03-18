@@ -1,0 +1,27 @@
+[0.686s] Invoking command in '/home/anjana/Documents/PR2/Simulation_03_17/smorphi_2d_simulation': PYTHONPATH=/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/smorphi_2d_simulation build --build-base /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build install --record /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log --single-version-externally-managed install_data
+[0.956s] running egg_info
+[0.957s] writing ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/PKG-INFO
+[0.957s] writing dependency_links to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/dependency_links.txt
+[0.957s] writing entry points to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/entry_points.txt
+[0.957s] writing requirements to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/requires.txt
+[0.957s] writing top-level names to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/top_level.txt
+[0.959s] reading manifest file '../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/SOURCES.txt'
+[0.960s] writing manifest file '../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/SOURCES.txt'
+[0.960s] running build
+[0.960s] running build_py
+[0.960s] copying smorphi_2d_simulation/shape_transform_manager.py -> /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.961s] running install
+[0.961s] running install_lib
+[0.962s] copying /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation/shape_transform_manager.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.962s] byte-compiling /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation/shape_transform_manager.py to shape_transform_manager.cpython-310.pyc
+[0.964s] running install_data
+[0.964s] copying config/sim_nav2_params.yaml -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/config
+[0.964s] running install_egg_info
+[0.966s] removing '/home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation-0.1.0-py3.10.egg-info' (and everything under it)
+[0.966s] Copying ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation-0.1.0-py3.10.egg-info
+[0.967s] running install_scripts
+[0.988s] Installing shape_transform_manager script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.988s] Installing sim_lidar_node script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.988s] Installing sim_robot_node script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.989s] writing list of installed files to '/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log'
+[1.013s] Invoked command in '/home/anjana/Documents/PR2/Simulation_03_17/smorphi_2d_simulation' returned '0': PYTHONPATH=/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/smorphi_2d_simulation build --build-base /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build install --record /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log --single-version-externally-managed install_data

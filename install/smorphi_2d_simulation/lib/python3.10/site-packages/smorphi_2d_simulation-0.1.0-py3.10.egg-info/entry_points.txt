@@ -1,0 +1,5 @@
+[console_scripts]
+shape_transform_manager = smorphi_2d_simulation.shape_transform_manager:main
+sim_lidar_node = smorphi_2d_simulation.sim_lidar_node:main
+sim_robot_node = smorphi_2d_simulation.sim_robot_node:main
+

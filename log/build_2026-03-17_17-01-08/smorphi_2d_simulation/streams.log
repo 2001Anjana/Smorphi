@@ -1,0 +1,55 @@
+[0.559s] Invoking command in '/home/anjana/Documents/PR2/Simulation_03_17/smorphi_2d_simulation': PYTHONPATH=/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/smorphi_2d_simulation build --build-base /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build install --record /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log --single-version-externally-managed install_data
+[0.750s] running egg_info
+[0.750s] creating ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info
+[0.750s] writing ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/PKG-INFO
+[0.751s] writing dependency_links to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/dependency_links.txt
+[0.751s] writing entry points to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/entry_points.txt
+[0.751s] writing requirements to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/requires.txt
+[0.751s] writing top-level names to ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/top_level.txt
+[0.751s] writing manifest file '../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/SOURCES.txt'
+[0.753s] reading manifest file '../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/SOURCES.txt'
+[0.753s] writing manifest file '../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info/SOURCES.txt'
+[0.753s] running build
+[0.753s] running build_py
+[0.753s] creating /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build
+[0.753s] creating /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib
+[0.753s] creating /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.753s] copying smorphi_2d_simulation/sim_robot_node.py -> /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.754s] copying smorphi_2d_simulation/__init__.py -> /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.754s] copying smorphi_2d_simulation/sim_lidar_node.py -> /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.754s] copying smorphi_2d_simulation/shape_transform_manager.py -> /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation
+[0.754s] running install
+[0.754s] running install_lib
+[0.755s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.755s] copying /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation/sim_robot_node.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.755s] copying /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation/__init__.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.755s] copying /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation/sim_lidar_node.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.755s] copying /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build/lib/smorphi_2d_simulation/shape_transform_manager.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation
+[0.755s] byte-compiling /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation/sim_robot_node.py to sim_robot_node.cpython-310.pyc
+[0.756s] byte-compiling /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation/__init__.py to __init__.cpython-310.pyc
+[0.756s] byte-compiling /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation/sim_lidar_node.py to sim_lidar_node.cpython-310.pyc
+[0.757s] byte-compiling /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation/shape_transform_manager.py to shape_transform_manager.cpython-310.pyc
+[0.758s] running install_data
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/ament_index
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/ament_index/resource_index
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/ament_index/resource_index/packages
+[0.758s] copying resource/smorphi_2d_simulation -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/ament_index/resource_index/packages
+[0.758s] copying package.xml -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/launch
+[0.758s] copying launch/sim_auto_transform.launch.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/launch
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/config
+[0.758s] copying config/sim_nav2_params.yaml -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/config
+[0.758s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/map
+[0.758s] copying map/sim_map.yaml -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/map
+[0.758s] copying map/sim_map.pgm -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/map
+[0.758s] copying map/generate_map.py -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/map
+[0.759s] creating /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/rviz
+[0.759s] copying rviz/sim_auto_transform.rviz -> /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/share/smorphi_2d_simulation/rviz
+[0.759s] running install_egg_info
+[0.760s] Copying ../build/smorphi_2d_simulation/smorphi_2d_simulation.egg-info to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages/smorphi_2d_simulation-0.1.0-py3.10.egg-info
+[0.761s] running install_scripts
+[0.777s] Installing shape_transform_manager script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.777s] Installing sim_lidar_node script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.777s] Installing sim_robot_node script to /home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/smorphi_2d_simulation
+[0.778s] writing list of installed files to '/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log'
+[0.797s] Invoked command in '/home/anjana/Documents/PR2/Simulation_03_17/smorphi_2d_simulation' returned '0': PYTHONPATH=/home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/anjana/Documents/PR2/Simulation_03_17/install/smorphi_2d_simulation/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/smorphi_2d_simulation build --build-base /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/build install --record /home/anjana/Documents/PR2/Simulation_03_17/build/smorphi_2d_simulation/install.log --single-version-externally-managed install_data

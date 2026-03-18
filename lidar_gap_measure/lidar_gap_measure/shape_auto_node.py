@@ -31,15 +31,15 @@ class ShapeAutoNode(Node):
         self.declare_parameter('dirs_topic', 'dir_distances')
         self.declare_parameter('shape_topic', 'shape_need')
 
-        self.declare_parameter('threshold_i', 0.35)
-        self.declare_parameter('threshold_o', 0.40)
+        self.declare_parameter('threshold_i', 0.45)
+        self.declare_parameter('threshold_o', 0.50)
 
         self.declare_parameter('sector_topic', 'left_back_sector_min')
         self.declare_parameter('required_radius', 0.40)
 
         # ✅ NEW: back gap width topic + narrow threshold
         self.declare_parameter('back_gap_topic', 'gap_width_back')
-        self.declare_parameter('back_narrow_thresh', 0.35)  # if back gap < 0.35 => still narrow
+        self.declare_parameter('back_narrow_thresh', 0.45)  # if back gap < 0.35 => still narrow
 
         self.declare_parameter('stable_samples', 5)
         self.declare_parameter('cooldown_s', 2.0)
