@@ -436,6 +436,14 @@ class SmorphiSim:
     def current_footprint(self):
         return self.footprints[self.shape]
 
+    def _footprint_center(self):
+        """Return (center_dr, center_dc) – the centre of the current
+        footprint in cell offsets from the robot origin."""
+        fp = self.current_footprint()
+        cr = sum(dr for dr, dc in fp) / len(fp)
+        cc = sum(dc for dr, dc in fp) / len(fp)
+        return cr, cc
+
     # ────────── drawing ──────────
     def draw_map(self):
         for r in range(ROWS):
@@ -574,8 +582,6 @@ class SmorphiSim:
         # Robot origin in pixels = top-left of M1
         ox = self.robot_c * CELL
         oy = self.robot_r * CELL
-        cx = ox + CELL / 2   # approximate body centre for arrow/label
-        cy = oy + CELL / 2
 
         # Choose module centre positions
         if self.transforming:
@@ -599,17 +605,40 @@ class SmorphiSim:
             label = self.font_sm.render(str(i+1), True, (255,255,255))
             self.screen.blit(label, (mx+3, my+3))
 
-        # Centre dot
-        col_c = (255,255,100) if self.transforming else (COL_O if self.shape==0 else COL_I)
-        pygame.draw.circle(self.screen, col_c, (int(cx), int(cy)), 3)
+        # ── Forward-direction arrow from Block 1 (M1) ──
+        # Arrow starts at centre of M1 and points in heading direction
+        m1_dx, m1_dy = centres[0]
+        m1_cx = ox + m1_dx          # M1 centre x (pixels)
+        m1_cy = oy + m1_dy          # M1 centre y (pixels)
 
-        # Heading arrow
-        ax = cx + 14 * math.cos(self.heading)
-        ay = cy + 14 * math.sin(self.heading)
-        pygame.draw.line(self.screen, (255,255,255),
-                         (int(cx), int(cy)), (int(ax), int(ay)), 2)
+        arrow_len = CELL * 1.8      # arrow extends well beyond M1
+        tip_x = m1_cx + arrow_len * math.cos(self.heading)
+        tip_y = m1_cy + arrow_len * math.sin(self.heading)
 
-        # Shape label
+        # Arrow shaft
+        arrow_col = (200, 255, 60)  # bright yellow-green
+        pygame.draw.line(self.screen, arrow_col,
+                         (int(m1_cx), int(m1_cy)),
+                         (int(tip_x), int(tip_y)), 2)
+
+        # Triangular arrowhead
+        head_size = 5.0
+        angle_l = self.heading + math.pi + math.pi / 5   # left barb
+        angle_r = self.heading + math.pi - math.pi / 5   # right barb
+        p1 = (tip_x, tip_y)
+        p2 = (tip_x + head_size * math.cos(angle_l),
+              tip_y + head_size * math.sin(angle_l))
+        p3 = (tip_x + head_size * math.cos(angle_r),
+              tip_y + head_size * math.sin(angle_r))
+        pygame.draw.polygon(self.screen, arrow_col,
+                            [(int(p1[0]),int(p1[1])),
+                             (int(p2[0]),int(p2[1])),
+                             (int(p3[0]),int(p3[1]))])
+
+        # Small dot at M1 centre (arrow origin)
+        pygame.draw.circle(self.screen, arrow_col, (int(m1_cx), int(m1_cy)), 2)
+
+        # Shape label above M1
         if self.transforming:
             lbl = "O>I" if self.transform_dir == 1 else "I>O"
             lbl_col = (255, 255, 80)
@@ -617,7 +646,7 @@ class SmorphiSim:
             lbl = "O" if self.shape == 0 else "I"
             lbl_col = (255, 255, 255)
         label = self.font_md.render(lbl, True, lbl_col)
-        self.screen.blit(label, (int(cx)-4, int(cy)-20))
+        self.screen.blit(label, (int(m1_cx)-4, int(m1_cy)-20))
 
     def draw_hud(self):
         pygame.draw.rect(self.screen, COL_HUD_BG, (HUD_X, 0, WIN_W-HUD_X, WIN_H))
@@ -838,9 +867,15 @@ class SmorphiSim:
             self.status_msg = "Goal reached!"
             return
 
-        # Pure-pursuit
+        # ── Pure-pursuit with M1-leads-toward-goal logic ──
+        # The robot origin is M1's grid position.  We want M1
+        # (at offset 0,0) to always be the module closest to the
+        # goal.  To achieve this we compute heading from M1 to
+        # the final goal, and steer M1 directly along the A* path.
         target_idx = min(self.path_idx + PURSUIT_LOOKAHEAD, len(self.path)-1)
         tr, tc = self.path[target_idx]
+
+        # Direction vector from M1 (robot origin) to the path target
         dr = tr - self.robot_r
         dc = tc - self.robot_c
         dist = math.hypot(dr, dc)
@@ -852,8 +887,17 @@ class SmorphiSim:
                 self.status_msg = "Goal reached!"
             return
 
+        # Heading always points from M1 toward the FINAL goal
+        # so the arrow on M1 always faces the destination.
+        if self.goal is not None:
+            goal_dr = self.goal[0] - self.robot_r
+            goal_dc = self.goal[1] - self.robot_c
+            if math.hypot(goal_dr, goal_dc) > 0.01:
+                self.heading = math.atan2(goal_dr, goal_dc)
+        else:
+            self.heading = math.atan2(dr, dc)
+
         speed = 0.08
-        self.heading = math.atan2(dr, dc)
         self.robot_r += dr / dist * speed
         self.robot_c += dc / dist * speed
 
