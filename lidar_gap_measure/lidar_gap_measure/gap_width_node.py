@@ -24,7 +24,7 @@ class GapWidthNode(Node):
 
         # --- Tunable parameters ---
         self.declare_parameter('scan_topic', '/scan')
-        self.declare_parameter('target_x', 0.60)
+        self.declare_parameter('target_x', 0.20)
         self.declare_parameter('x_tol', 0.05)
         self.declare_parameter('range_min_valid', 0.10)
         self.declare_parameter('range_max_valid', 8.0)
@@ -52,9 +52,12 @@ class GapWidthNode(Node):
         self.pub_dir_rays = self.create_publisher(MarkerArray, 'dir_rays', 10)
         self.pub_dir_text = self.create_publisher(MarkerArray, 'dir_text', 10)
 
+        # ✅ NEW: gap width value as text in RViz
+        self.pub_gap_text = self.create_publisher(Marker, 'gap_text', 10)
+
         self.get_logger().info(
-            f"Listening on {scan_topic}. Publishing gap_width, gap_marker, dir_distances, "
-            f"left_back_sector_min, dir_rays, dir_text."
+            f"Listening on {scan_topic}. Publishing gap_width, gap_marker, gap_text, "
+            f"dir_distances, left_back_sector_min, dir_rays, dir_text."
         )
 
     def min_range_in_window(self, angles, ranges, center_rad, half_width_rad):
@@ -290,6 +293,16 @@ class GapWidthNode(Node):
 
         mk.points = [p1, p2]
         self.pub_marker.publish(mk)
+
+        # ✅ Gap width as floating text in RViz
+        txt = self.make_text_marker(
+            msg.header, "gap_text", 0,
+            Point(x=target_x, y=(y_left + y_right) / 2.0, z=0.15),
+            f"Gap: {width:.2f} m",
+            rgba=(0.0, 1.0, 0.0, 1.0),
+            scale_z=0.15,
+        )
+        self.pub_gap_text.publish(txt)
 
 
 def main():
