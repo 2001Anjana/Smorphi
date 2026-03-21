@@ -10,9 +10,9 @@ def generate_launch_description():
             output='screen',
             parameters=[
                 {'gap_topic': '/gap_width'},
+                {'back_gap_topic': '/gap_width_back'},
                 {'shape_topic': 'shape_need'},
-                {'threshold_i': 0.30},
-                {'threshold_o': 0.35},
+                {'threshold': 0.50},
                 {'stable_samples': 5},
                 {'cooldown_s': 2.0},
             ],
