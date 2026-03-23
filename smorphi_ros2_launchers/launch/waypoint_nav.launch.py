@@ -21,7 +21,7 @@ def generate_launch_description():
     map_yaml_file = LaunchConfiguration(
         'map_yaml_file',
         default=PathJoinSubstitution(
-            [FindPackageShare('smorphi_ros2_launchers'), 'map', 'random3.yaml']
+            [FindPackageShare('smorphi_ros2_launchers'), 'map', 'pr2_2.yaml']
         )
     )
 
