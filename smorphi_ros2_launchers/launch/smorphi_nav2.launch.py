@@ -46,7 +46,7 @@ def generate_launch_description():
             [
                 FindPackageShare('smorphi_ros2_launchers'),
                 'map',
-                'random3.yaml'
+                'pr2_2.yaml'
             ]
         )
     )
