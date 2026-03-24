@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smorphi Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <div class="logo-mark">◈</div>
+      <div>
+        <h1>SMORPHI</h1>
+        <span class="subtitle">Robot Control Interface</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="connectionStatus">DISCONNECTED</span>
+      </div>
+      <button class="btn-connect" onclick="connectRos()">CONNECT</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- LEFT: Control Panel -->
+    <aside class="control-panel">
+
+      <section class="ctrl-section">
+        <h2 class="section-label">WORKSPACE</h2>
+        <button class="btn btn-action" onclick="build()">⬡ Colcon Build</button>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">BRINGUP</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="bringupStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="bringupStop()">■ Stop</button>
+        </div>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">TRANSFORM</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="transformEnable()">▶ Enable</button>
+          <button class="btn btn-stop" onclick="transformDisable()">■ Disable</button>
+        </div>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">SENSORS</h2>
+        <button class="btn btn-action" onclick="mpuOdom()">⬡ MPU → Odom</button>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">VISUALIZATION</h2>
+        <button class="btn btn-action" onclick="rvizStart()">⬡ Launch RViz2</button>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">TELEOPERATION</h2>
+        <button class="btn btn-start full-width" onclick="teleopEnable()">▶ Enable Teleop</button>
+        <div class="teleop-hint">
+          <div class="key-grid">
+            <span></span><span class="key">i</span><span></span>
+            <span class="key">j</span><span class="key">k</span><span class="key">l</span>
+            <span></span><span class="key">,</span><span></span>
+          </div>
+          <p class="hint-text">Virtual keyboard opens automatically</p>
+        </div>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">MAPPING</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="mappingStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="mappingStop()">■ Stop</button>
+        </div>
+        <button class="btn btn-action full-width" style="margin-top:6px" onclick="saveMap()">⬡ Save Map</button>
+      </section>
+
+      <section class="ctrl-section">
+        <h2 class="section-label">NAVIGATION</h2>
+        <div class="btn-row">
+          <button class="btn btn-start" onclick="navStart()">▶ Start</button>
+          <button class="btn btn-stop" onclick="navStop()">■ Stop</button>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- RIGHT: Terminal Grid -->
+    <div class="terminal-grid">
+
+      <div class="terminal-panel" id="panel-bringup">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-bringup"></span>
+          <span class="term-title">BRINGUP</span>
+          <button class="term-clear" onclick="clearLog('bringup')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-bringup"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-teleop">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-teleop"></span>
+          <span class="term-title">TELEOP</span>
+          <button class="term-clear" onclick="clearLog('teleop')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-teleop"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-mapping">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-mapping"></span>
+          <span class="term-title">MAPPING</span>
+          <button class="term-clear" onclick="clearLog('mapping')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-mapping"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-nav">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-nav"></span>
+          <span class="term-title">NAVIGATION</span>
+          <button class="term-clear" onclick="clearLog('nav')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-nav"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-transform">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-transform"></span>
+          <span class="term-title">TRANSFORM</span>
+          <button class="term-clear" onclick="clearLog('transform')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-transform"></pre>
+      </div>
+
+      <div class="terminal-panel" id="panel-misc">
+        <div class="term-header">
+          <span class="term-session-dot" id="dot-misc"></span>
+          <span class="term-title">MISC / BUILD</span>
+          <button class="term-clear" onclick="clearLog('misc')">CLR</button>
+        </div>
+        <pre class="log-box" id="log-misc"></pre>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Virtual Keyboard Modal for Teleop -->
+  <div id="teleopModal" class="teleop-modal">
+    <div class="teleop-modal-content">
+      <div class="teleop-modal-header">
+        <h3>🎮 TELEOP CONTROL</h3>
+        <button class="btn-close" onclick="teleopDisable()">×</button>
+      </div>
+      
+      <div class="teleop-status">
+        <span class="status-indicator"></span>
+        <span>Use physical keyboard or click buttons</span>
+      </div>
+
+      <div class="teleop-keyboard">
+        <div class="key-section">
+          <div class="key-label">MOVEMENT</div>
+          <div class="key-row">
+            <button class="vkey" data-key="u" onmousedown="sendTeleopKey('u')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('u')" ontouchend="stopTeleopKey()">u</button>
+            <button class="vkey" data-key="i" onmousedown="sendTeleopKey('i')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('i')" ontouchend="stopTeleopKey()">i</button>
+            <button class="vkey" data-key="o" onmousedown="sendTeleopKey('o')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('o')" ontouchend="stopTeleopKey()">o</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="j" onmousedown="sendTeleopKey('j')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('j')" ontouchend="stopTeleopKey()">j</button>
+            <button class="vkey" data-key="k" onmousedown="sendTeleopKey('k')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('k')" ontouchend="stopTeleopKey()">k</button>
+            <button class="vkey" data-key="l" onmousedown="sendTeleopKey('l')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('l')" ontouchend="stopTeleopKey()">l</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="m" onmousedown="sendTeleopKey('m')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('m')" ontouchend="stopTeleopKey()">m</button>
+            <button class="vkey" data-key="," onmousedown="sendTeleopKey(',')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey(',')" ontouchend="stopTeleopKey()">,</button>
+            <button class="vkey" data-key="." onmousedown="sendTeleopKey('.')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('.')" ontouchend="stopTeleopKey()">.</button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">STRAFE (Shift)</div>
+          <div class="key-row">
+            <button class="vkey" data-key="U" onmousedown="sendTeleopKey('U')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('U')" ontouchend="stopTeleopKey()">U</button>
+            <button class="vkey" data-key="I" onmousedown="sendTeleopKey('I')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('I')" ontouchend="stopTeleopKey()">I</button>
+            <button class="vkey" data-key="O" onmousedown="sendTeleopKey('O')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('O')" ontouchend="stopTeleopKey()">O</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="J" onmousedown="sendTeleopKey('J')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('J')" ontouchend="stopTeleopKey()">J</button>
+            <button class="vkey" data-key="K" onmousedown="sendTeleopKey('K')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('K')" ontouchend="stopTeleopKey()">K</button>
+            <button class="vkey" data-key="L" onmousedown="sendTeleopKey('L')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('L')" ontouchend="stopTeleopKey()">L</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="M" onmousedown="sendTeleopKey('M')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('M')" ontouchend="stopTeleopKey()">M</button>
+            <button class="vkey" data-key="<" onmousedown="sendTeleopKey('<')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('<')" ontouchend="stopTeleopKey()"><</button>
+            <button class="vkey" data-key=">" onmousedown="sendTeleopKey('>')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('>')" ontouchend="stopTeleopKey()">></button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">VERTICAL</div>
+          <div class="key-row">
+            <button class="vkey" data-key="t" onmousedown="sendTeleopKey('t')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('t')" ontouchend="stopTeleopKey()">t ↑</button>
+            <button class="vkey" data-key="b" onmousedown="sendTeleopKey('b')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('b')" ontouchend="stopTeleopKey()">b ↓</button>
+          </div>
+        </div>
+
+        <div class="key-section">
+          <div class="key-label">SPEED ADJUST</div>
+          <div class="key-row">
+            <button class="vkey" data-key="q" onmousedown="sendTeleopKey('q')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('q')" ontouchend="stopTeleopKey()">q +10%</button>
+            <button class="vkey" data-key="z" onmousedown="sendTeleopKey('z')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('z')" ontouchend="stopTeleopKey()">z -10%</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="w" onmousedown="sendTeleopKey('w')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('w')" ontouchend="stopTeleopKey()">w +Lin</button>
+            <button class="vkey" data-key="x" onmousedown="sendTeleopKey('x')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('x')" ontouchend="stopTeleopKey()">x -Lin</button>
+          </div>
+          <div class="key-row">
+            <button class="vkey" data-key="e" onmousedown="sendTeleopKey('e')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('e')" ontouchend="stopTeleopKey()">e +Ang</button>
+            <button class="vkey" data-key="c" onmousedown="sendTeleopKey('c')" onmouseup="stopTeleopKey()" onmouseleave="stopTeleopKey()" ontouchstart="sendTeleopKey('c')" ontouchend="stopTeleopKey()">c -Ang</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="teleop-info">
+        <p><strong>i/j/k/l</strong> = forward/left/stop/right</p>
+        <p><strong>u/o/m/.</strong> = diagonals</p>
+        <p><strong>K or Space</strong> = STOP</p>
+      </div>
+    </div>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
