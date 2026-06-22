@@ -446,10 +446,19 @@ class MyPythonNode(Node):
         msg.angular_velocity_covariance = [0.0025, 0.0, 0.0, 0.0, 0.0025, 0.0, 0.0, 0.0, 0.0025]
         
         # Orientation (convert to quaternion)
+        # --- UNIT FIX ---
+        # roll/pitch come from the Kalman filter in DEGREES (computeRollAndPitch
+        # uses np.degrees), so radians() is correct for them.
+        # BUT the gyro-only yaw path integrates `self.yaw + gz*dt` where the
+        # driver's GyroVals are already in RADIANS/sec (GyroScale includes
+        # Degree2Radian), so self.sensorfusion.yaw is ALREADY in radians.
+        # Passing it through radians() again shrank it by ~57.3x, so the robot
+        # had to physically spin ~57 deg for the IMU to report 1 deg of yaw.
+        # That is why the laser scan appeared glued to the robot during turns.
         quat = tf_transformations.quaternion_from_euler(
-            radians(self.sensorfusion.roll), 
-            radians(self.sensorfusion.pitch), 
-            radians(self.sensorfusion.yaw))
+            radians(self.sensorfusion.roll),
+            radians(self.sensorfusion.pitch),
+            self.sensorfusion.yaw)   # already in radians - do NOT wrap in radians()
         
         msg.orientation.x = quat[0]
         msg.orientation.y = quat[1]

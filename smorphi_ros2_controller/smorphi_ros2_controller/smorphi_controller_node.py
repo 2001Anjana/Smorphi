@@ -133,24 +133,34 @@ class SmorphiController(Node):
         # print("new imu= ")
         # print(self.w)
         dt = (ct - lt)
+        # Guard against first cycle / clock glitches (dt==0 -> divide-by-zero below)
+        if dt <= 0.0:
+            self.last_time = current_time
+            return
+
         delta_yaw = yaw - self.prev_yaw
         # Handle wraparound
         if delta_yaw > math.pi:
             delta_yaw -= 2 * math.pi
         elif delta_yaw < -math.pi:
             delta_yaw += 2 * math.pi
-        # print(dt)
-        # dt = (current_time - self.last_time).to_sec()
+
         delta_x = (self.vx * math.cos(self.th) - self.vy * math.sin(self.th)) * dt
         delta_y = (self.vx * math.sin(self.th) + self.vy * math.cos(self.th)) * dt
-        self.w = delta_yaw / dt          # angular velocity
-        self.th += delta_yaw             # integrate orientation
+        self.w = delta_yaw / dt          # angular velocity (rad/s)
         self.prev_yaw = yaw
-        delta_th = self.w * dt
 
         self.x += delta_x
         self.y += delta_y
-        self.th += self.w
+        self.th += delta_yaw             # integrate orientation ONCE
+        # --- BUG REMOVED ---
+        # The old code did `self.th += self.w` here as well. self.w is an
+        # angular RATE (rad/s, ~1-15 during a turn), not an angle. Adding it to
+        # the heading every cycle made wheel_odom heading spin tens of times
+        # faster than the real robot ("wheel encoder rotating very fast"), and
+        # because delta_x/delta_y use self.th, it also made wheel_odom x/y
+        # spiral. The EKF fuses wheel_odom x/y as absolute position, so that
+        # spiral was corrupting the fused pose. Heading is now integrated once.
         [quat_x, quat_y, quat_z, quat_w] = tf_transformations.quaternion_from_euler(0, 0, self.th)
         odom = Odometry()
         odom.header.stamp = self.get_clock().now().to_msg()

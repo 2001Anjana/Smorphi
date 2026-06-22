@@ -2,6 +2,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 import os
 from ament_index_python import get_package_share_directory
@@ -74,7 +75,28 @@ def generate_launch_description():
         'shape_auto.launch.py'
     )
 
+    # --- CRITICAL FIX ---
+    # The EKF (robot_localization) needs to transform IMU data from its own
+    # frame ('imu_link') into 'base_link'. Without this static transform, TF
+    # cannot resolve imu_link, the EKF silently DROPS every IMU measurement,
+    # and since the IMU is the only yaw source the yaw state is never corrected
+    # -> its covariance grows without bound (the ~1.0e7 you saw on /odom).
+    #
+    # Args are: x y z yaw pitch roll parent child   (metres / radians)
+    # Replace the 0 0 0 0 0 0 below with the IMU's REAL mounting offset and
+    # orientation relative to base_link. If the IMU board is rotated, the yaw
+    # offset here matters a lot.
+    imu_static_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='base_link_to_imu_link',
+        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'imu_link'],
+    )
+
     return LaunchDescription([
+        # IMU mounting transform (fixes unbounded yaw covariance)
+        imu_static_tf,
+
         # Declare LiDAR args
         declare_lidar_port,
         declare_lidar_baud,
@@ -115,5 +137,4 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(shape_auto_launch)
         ),
     ])
-
 
