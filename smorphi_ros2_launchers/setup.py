@@ -32,6 +32,7 @@ setup(
             'save_waypoint = smorphi_ros2_launchers.waypoint_manager:main',
             'go_to_waypoint = smorphi_ros2_launchers.waypoint_commander:main',
             'show_waypoint_labels = smorphi_ros2_launchers.waypoint_label_publisher:main',
+            'plot_paths = smorphi_ros2_launchers.path_comparison_plotter:main',
         ],
     },
 )
