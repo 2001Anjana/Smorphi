@@ -1,0 +1,9 @@
+# build artifacts
+__pycache__/
+*.pyc
+
+# runtime output (the semantic map is regenerated at runtime; don't commit it)
+*.semantic_map.yaml
+
+# keep models/best.pt in git (it is part of the deployable package).
+# If you prefer Git LFS, run:  git lfs track "*.pt"
