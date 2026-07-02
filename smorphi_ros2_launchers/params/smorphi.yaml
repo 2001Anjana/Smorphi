@@ -141,7 +141,7 @@ controller_server:
       min_vel_y: 0.0
       max_vel_x: 0.50        # was 0.22 - forward speed used by the planner
       max_vel_y: 0.0
-      max_vel_theta: 3.20    # was 2.84 - rotational speed used by the planner
+      max_vel_theta: 1.2     # was 3.20 - lowered to stop large/long rotations during navigation
       min_speed_xy: 0.0
       max_speed_xy: 0.50     # was 0.22 - MUST be >= max_vel_x or it re-caps you
       min_speed_theta: 0.0
@@ -149,10 +149,10 @@ controller_server:
       # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
       acc_lim_x: 2.5
       acc_lim_y: 0.0
-      acc_lim_theta: 3.2
+      acc_lim_theta: 1.5     # was 3.2 - gentler angular acceleration
       decel_lim_x: -2.5
       decel_lim_y: 0.0
-      decel_lim_theta: -3.2
+      decel_lim_theta: -1.5  # was -3.2 - gentler angular deceleration
       vx_samples: 20
       vy_samples: 5
       vtheta_samples: 20
@@ -309,9 +309,9 @@ behavior_server:
     transform_tolerance: 0.1
     use_sim_time: False
     simulate_ahead_time: 2.0
-    max_rotational_vel: 2.84   # was 1.0 - speed of the spin recovery behaviour
+    max_rotational_vel: 1.2    # was 2.84 - matched to max_vel_theta so the spin recovery doesn't whip around
     min_rotational_vel: 0.40
-    rotational_acc_lim: 3.2
+    rotational_acc_lim: 1.5    # was 3.2 - matched to acc_lim_theta
 
 robot_state_publisher:
   ros__parameters:
